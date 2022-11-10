@@ -1,12 +1,12 @@
 package test;
 
-import io.restassured.http.ContentType;
+import data.Book;
+import data.Bookingdates;
 import org.testng.annotations.Test;
 import spec.Specification;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 
 public class BookingTest {
@@ -15,17 +15,12 @@ public class BookingTest {
     @Test
     public void testCreatedBook(){
         Specification.installSpecification(Specification.requestSpec(URL), Specification.responseSpec(200));
-        String book = "{\n" +
-                "    \"firstname\" : \"Jim\",\n" +
-                "    \"lastname\" : \"Brown\",\n" +
-                "    \"totalprice\" : 111,\n" +
-                "    \"depositpaid\" : true,\n" +
-                "    \"bookingdates\" : {\n" +
-                "        \"checkin\" : \"2018-01-01\",\n" +
-                "        \"checkout\" : \"2019-01-01\"\n" +
-                "    },\n" +
-                "    \"additionalneeds\" : \"Breakfast\"\n" +
-                "}";
+        Book book = new Book("Jim",
+                "Brown",
+                111,
+                true,
+                new Bookingdates("2018-01-01", "2019-01-01"),
+                "Breakfast");
         given()
                 .body(book)
                 .when().post("/booking/")
