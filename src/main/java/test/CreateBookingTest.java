@@ -9,20 +9,18 @@ import org.testng.annotations.Test;
 
 
 public class CreateBookingTest extends BookingTestBase {
-
-    @Test(dataProvider = "createBooksPositive", dataProviderClass = GuestData.class)
+    @Test(dataProvider = "createGuestPositive", dataProviderClass = GuestData.class)
     public void testCreatedBook(Guest guest){
         testClient = new TestClient();
-
-       GuestValidatableResponse response = testClient.createGuest(guest)
+        GuestValidatableResponse response = testClient.createGuest(guest)
                .checkStatusCode(200)
                .checkIdNotNull()
-               .checkBook(guest);
+               .checkGuest(guest);
 
-       id = response.getId();
-       testClient.getGuest(response.getId())
+        guestId = response.getId();
+        testClient.getGuest(response.getId())
                .checkStatusCode(200)
-               .checkFindBook(guest);
+               .checkFindGuest(guest);
     }
 
 

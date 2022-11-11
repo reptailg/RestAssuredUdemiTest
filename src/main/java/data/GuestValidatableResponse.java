@@ -29,12 +29,12 @@ public class GuestValidatableResponse {
         return this;
     }
 
-    public GuestValidatableResponse checkBook(Guest expected){
+    public GuestValidatableResponse checkGuest(Guest expected){
         Assert.assertEquals(guestResponse.booking,expected);
         return this;
     }
 
-    public GuestValidatableResponse checkFindBook(Guest expected){
+    public GuestValidatableResponse checkFindGuest(Guest expected){
         Assert.assertEquals(guest, expected);
         return this;
     }
@@ -42,5 +42,7 @@ public class GuestValidatableResponse {
     public Integer getId(){
         return response.jsonPath().getInt("bookingid");
     }
+
+
 
 }

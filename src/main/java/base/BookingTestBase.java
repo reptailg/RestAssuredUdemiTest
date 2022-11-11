@@ -4,23 +4,25 @@ import client.TestClient;
 import config.TestConfig;
 import data.Admin;
 import io.restassured.http.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
 import static io.restassured.RestAssured.given;
 
 public class BookingTestBase {
+    public static final Logger log = LoggerFactory.getLogger(BookingTestBase.class.getName());
     protected static TestClient testClient;
-    protected String token;
-    protected Integer id;
+    static {
+        testClient = new TestClient();
+    }
 
-//    static {
-//        TestClient testClient = new TestClient();
-//    }
-
+    protected String authToken;
+    protected Integer guestId;
     @BeforeTest
     public void getTokenTest(){
-        token = "token=" + given().baseUri(TestConfig.URI.value)
+        authToken = "token=" + given().baseUri(TestConfig.URI.value)
                 .contentType(ContentType.JSON)
                 .body(new Admin())
                 .when()
@@ -34,12 +36,15 @@ public class BookingTestBase {
         try {
             given().baseUri(TestConfig.URI.value)
                     .contentType(ContentType.JSON)
-                    .header("Cookie",token)
+                    .header("Cookie", authToken)
                     .when()
-                    .delete("booking/{id}", id);
-            System.out.printf("Delete guest %d is completed ", id);
+                    .delete("booking/{id}", guestId);
+
+            log.info("Delete guest {} is completed ", guestId);
         }catch (Exception e){
-            System.out.println("Can't find guest " + id);
+            log.info(String.format("%60s", "-").replace(' ', '-'));
+            log.info(String.format("%60s", "-").replace(' ', '-'));
+            log.error("Can't find guest {}", guestId);
         }
     }
 

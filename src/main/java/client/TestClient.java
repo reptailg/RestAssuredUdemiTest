@@ -3,7 +3,9 @@ package client;
 import data.Admin;
 import data.Guest;
 import data.GuestValidatableResponse;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,8 @@ public class TestClient {
 
     public TestClient() {
         this(TestConfig.URI.value);
+        RestAssured.defaultParser = Parser.JSON;
+
     }
 
     public RequestSpecification getRequestSpec(){
@@ -54,5 +58,14 @@ public class TestClient {
                 .then().log().all()
                 .extract().response().jsonPath().getString("token");
 
+    }
+
+    public GuestValidatableResponse updateGuest(int id, Guest guest, String token){
+        Response response = getRequestSpec(guest)
+                .header("Cookie",token)
+                .when()
+                .put("booking/{id}", id);
+        response.then().log().all();
+        return new GuestValidatableResponse(response,"put");
     }
 }
